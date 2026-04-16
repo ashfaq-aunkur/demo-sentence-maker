@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.post("/make-sentence", async (req, res) => {   // ← Added: async
+app.post("/make-sentence", async (req, res) => {   
   try {
     const activityObject = req.body;
 
@@ -51,7 +51,7 @@ source: ${activityObject.source}
         temperature: 0
       }
     });
-
+    
     const sentence = response.message.content.trim();
 
     res.json({
