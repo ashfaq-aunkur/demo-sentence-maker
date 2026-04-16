@@ -56,7 +56,6 @@ source: ${activityObject.source}
 
     res.json({
       success: true,
-      input: activityObject,
       sentence: sentence
     });
 
