@@ -1,0 +1,13 @@
+langchain
+langchain-core
+langchain-ollama
+langchain-openai
+langchain-community
+openai
+
+python-dotenv
+
+numpy 
+scikit-learn  
+
+pyodbc
