@@ -18,7 +18,10 @@ services:
       - "3000:3000"
     depends_on:
       - ollama
-      
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+
+
 volumes:
   ollama_data:
     

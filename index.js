@@ -40,6 +40,10 @@ created_at: ${activityObject.createdAt}
 source: ${activityObject.source}
 `.trim();
 
+const ollama = new Ollama({
+  host: process.env.OLLAMA_HOST || "http://ollama:11434"
+});
+
     // Call Ollama
     const response = await ollama.chat({
       model: 'qwen3:8b',
