@@ -1,9 +1,7 @@
-
-
 version: "3.9"
 
-services: 
- ollama:
+services:
+  ollama:
     image: ollama/ollama:latest
     container_name: ollama
     ports:
@@ -11,7 +9,19 @@ services:
     volumes:
       - ollama_data:/root/.ollama
 
- api: 
+  ollama-pull:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      sleep 5 && ollama pull qwen3:8b
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+
+  api:
     build: .
     container_name: sentence-making-api
     ports:
@@ -21,7 +31,5 @@ services:
     environment:
       OLLAMA_HOST: http://ollama:11434
 
-
 volumes:
   ollama_data:
-    
