@@ -1,18 +1,22 @@
 const express = require("express");
-const ollama = require("ollama").default;   // ← Fixed: correct package name
+const { Ollama } = require("ollama");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const ollama = new Ollama({
+  host: process.env.OLLAMA_HOST || "http://ollama:11434",
+});
+
 app.use(express.json());
 
-app.post("/make-sentence", async (req, res) => {   
+app.post("/make-sentence", async (req, res) => {
   try {
     const activityObject = req.body;
 
     if (!activityObject || typeof activityObject !== "object") {
-      return res.status(400).json({ 
-        error: "Request Body must be a valid JSON object" 
+      return res.status(400).json({
+        error: "Request Body must be a valid JSON object"
       });
     }
 
@@ -33,38 +37,36 @@ Rules:
     const userMessage = `
 activity_type: ${activityObject.activity_type}
 action_type: ${activityObject.action_type}
-table_slug: ${activityObject.table_slug || ''}
-farmer_name: ${activityObject.farmer_name || ''}
+table_slug: ${activityObject.table_slug || ""}
+farmer_name: ${activityObject.farmer_name || ""}
 user_name: ${activityObject.user_name}
 created_at: ${activityObject.createdAt}
 source: ${activityObject.source}
 `.trim();
 
-    // Call Ollama
     const response = await ollama.chat({
-      model: 'qwen3:8b',
+      model: "qwen3:8b",
       messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userMessage }
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userMessage }
       ],
       options: {
         temperature: 0
       }
     });
-    
+
     const sentence = response.message.content.trim();
 
     res.json({
       success: true,
-      sentence: sentence
+      sentence
     });
-
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       error: "Failed to generate sentence",
-      message: error.message 
+      message: error.message
     });
   }
 });
