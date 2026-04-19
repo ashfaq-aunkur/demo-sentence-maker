@@ -1,0 +1,3 @@
+FROM ollama/ollama:latest
+
+CMD ["/bin/sh", "-c", "ollama serve & while ! ollama list >/dev/null 2>&1; do sleep 2; done; ollama pull qwen3:8b; wait"]
