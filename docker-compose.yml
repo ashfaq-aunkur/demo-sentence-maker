@@ -8,16 +8,20 @@ services:
       - "11435:11434"
     volumes:
       - ollama_data:/root/.ollama
-    entrypoint:
-      - /bin/sh
-      - -c
+
+  ollama-pull:
+    image: curlimages/curl:latest
+    depends_on:
+      - ollama
+    entrypoint: ["/bin/sh", "-c"]
     command: >
-      ollama serve &
-      until ollama list >/dev/null 2>&1; do
-        sleep 2
-      done
-      ollama pull qwen3:8b
-      wait
+      until curl -s http://ollama:11434/api/tags >/dev/null; do
+        echo "Waiting for Ollama...";
+        sleep 2;
+      done;
+      curl -X POST http://ollama:11434/api/pull
+      -H "Content-Type: application/json"
+      -d '{"name":"qwen3:8b"}'
 
   api:
     build: .
