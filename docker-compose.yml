@@ -15,11 +15,10 @@ services:
       - ollama
     volumes:
       - ollama_data:/root/.ollama
-    entrypoint: ["/bin/sh", "-c"]
-    command: >
-      sleep 5 && ollama pull qwen3:8b
     environment:
       OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command: "sleep 5; ollama pull qwen3:8b"
 
   api:
     build: .
