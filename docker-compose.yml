@@ -8,7 +8,16 @@ services:
       - "11435:11434"
     volumes:
       - ollama_data:/root/.ollama
-    command: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull qwen3:8b && wait"]
+    entrypoint:
+      - /bin/sh
+      - -c
+    command: >
+      ollama serve &
+      until ollama list >/dev/null 2>&1; do
+        sleep 2
+      done
+      ollama pull qwen3:8b
+      wait
 
   api:
     build: .
