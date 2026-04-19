@@ -2,24 +2,33 @@ version: "3.9"
 
 services:
   ollama:
-    build:
-      context: .
-      dockerfile: dockerfile.ollama
+    image: ollama/ollama:latest
     container_name: ollama
     ports:
       - "11435:11434"
     volumes:
       - ollama_data:/root/.ollama
 
+  ollama-pull:
+    image: curlimages/curl:latest
+    depends_on:
+      - ollama
+    entrypoint: >
+      sh -c "
+      until curl -s http://ollama:11434/api/tags > /dev/null; do
+        sleep 2;
+      done;
+      curl -X POST http://ollama:11434/api/pull -d '{\"model\":\"qwen3:8b\",\"stream\":false}';
+      "
+
   api:
-    build:
-      context: .
-      dockerfile: dockerfile
+    build: .
     container_name: sentence-making-api
     ports:
       - "3000:3000"
     depends_on:
       - ollama
+      - ollama-pull
     environment:
       OLLAMA_HOST: http://ollama:11434
 
