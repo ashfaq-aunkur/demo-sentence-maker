@@ -8,17 +8,7 @@ services:
       - "11435:11434"
     volumes:
       - ollama_data:/root/.ollama
-
-  ollama-pull:
-    image: ollama/ollama:latest
-    depends_on:
-      - ollama
-    volumes:
-      - ollama_data:/root/.ollama
-    environment:
-      OLLAMA_HOST: http://ollama:11434
-    entrypoint: ["/bin/sh", "-c"]
-    command: "sleep 5; ollama pull qwen3:8b"
+    command: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull qwen3:8b && wait"]
 
   api:
     build: .
