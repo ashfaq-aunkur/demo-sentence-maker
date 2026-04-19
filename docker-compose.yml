@@ -4,7 +4,7 @@ services:
   ollama:
     build:
       context: .
-      dockerfile: Dockerfile.ollama
+      dockerfile: dockerfile.ollama
     container_name: ollama
     ports:
       - "11435:11434"
@@ -14,7 +14,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     container_name: sentence-making-api
     ports:
       - "3000:3000"
